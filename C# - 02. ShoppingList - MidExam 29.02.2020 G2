@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace _02._ShoppingList
+{
+    class ShoppingList
+    {
+        static void Main()
+        {
+
+            List<string> groceriesList = Console.ReadLine().Split('!').ToList();
+
+            string command = Console.ReadLine();
+            while (command != "Go Shopping!")
+            {
+                string[] currentCommand = command.Split();
+                string instruction = currentCommand[0];
+
+                if (instruction == "Urgent")
+                {
+                    string item = currentCommand[1];
+
+                    if (!groceriesList.Contains(item))
+                    {
+                        groceriesList.Insert(0, item);
+                    }
+                }
+
+                else if (instruction == "Unnecessary")
+                {
+                    string item = currentCommand[1];
+
+                    if (groceriesList.Contains(item))
+                    {
+                        groceriesList.Remove(item);
+                    }
+                }
+
+                else if (instruction == "Correct")
+                {
+                    string oldItem = currentCommand[1];
+                    string newItem = currentCommand[2];
+
+                    if (groceriesList.Contains(oldItem))
+                    {
+                        int index = groceriesList.IndexOf(oldItem);
+
+                        groceriesList.Insert(index, newItem);
+                        groceriesList.RemoveAt(index + 1);
+                    }
+                }
+
+                else if (instruction == "Rearrange")
+                {
+                    string item = currentCommand[1];
+
+                    if (groceriesList.Contains(item))
+                    {
+                        groceriesList.Remove(item);
+                        groceriesList.Add(item);
+                    }
+                }
+
+                command = Console.ReadLine();
+            }
+
+            Console.WriteLine(string.Join(", ", groceriesList));
+        }
+    }
+}
