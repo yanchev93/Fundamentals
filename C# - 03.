@@ -1,0 +1,77 @@
+using System;
+using System.Linq;
+
+namespace _03._HearthDelivery
+{
+    class HeathDelivery
+    {
+        static void Main()
+        {
+            int[] neighborhood = Console.ReadLine()
+                                 .Split('@')
+                                 .Select(int.Parse)
+                                 .ToArray();
+
+            int index = 0;
+            bool isMissionSuccessful = true;
+
+            string command = Console.ReadLine();
+            while (command != "Love!")
+            {
+                int length = int.Parse(command.Split()[1]);
+
+                index += length;
+
+                if (index > neighborhood.Length - 1)
+                {
+                    index = 0;
+                }
+
+                if (neighborhood[index] == 0)
+                {
+                    Console.WriteLine($"Place {index} already had Valentine's day.");
+
+                    command = Console.ReadLine();
+                    continue;
+                }
+
+                neighborhood[index] -= 2;
+
+                if (neighborhood[index] == 0)
+                {
+                    Console.WriteLine($"Place {index} has Valentine's day.");
+                }
+
+                command = Console.ReadLine();
+            }
+
+            Console.WriteLine($"Cupid's last position was {index}.");
+
+            int houseCount = 0;
+            for (int i = 0; i < neighborhood.Length; i++)
+            {
+                if ( neighborhood[i] == 0)
+                {
+                    continue;
+                }
+
+                else
+                {
+                    houseCount += 1;
+                    isMissionSuccessful = false;
+                }
+
+            }
+
+            if (isMissionSuccessful)
+            {
+                Console.WriteLine("Mission was successful.");
+            }
+
+            else
+            {
+                Console.WriteLine($"Cupid has failed {houseCount} places.");
+            }
+        }
+    }
+}
