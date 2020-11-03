@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace _03._MovingTarget
+{
+    class Program
+    {
+        static void Main()
+        {
+            List<int> targets = Console.ReadLine()
+                                .Split()
+                                .Select(int.Parse)
+                                .ToList();
+
+            string commands = Console.ReadLine();
+            while (commands != "End")
+            {
+                string[] currentCommand = commands.Split();
+
+                string instruction = currentCommand[0];
+                int index = int.Parse(currentCommand[1]);
+                int PVR = int.Parse(currentCommand[2]);
+
+                if (0 <= index && index < targets.Count)
+                {
+                    if (instruction == "Shoot")
+                    {
+                        targets[index] -= PVR;
+                        if (targets[index] <= 0)
+                        {
+                            targets.RemoveAt(index);
+                        }
+                    }
+
+                    else if (instruction == "Add")
+                    {
+                        targets.Insert(index, PVR);
+                    }
+
+                    
+                    else if (instruction == "Strike")
+                    {
+                        if (0 <= index - PVR && index + PVR < targets.Count)
+                        {
+                            targets.RemoveRange(index - PVR, PVR * 2 + 1);
+
+                            commands = Console.ReadLine();
+                            continue;
+                        }
+
+                        Console.WriteLine("Strike missed!");
+
+                    }
+                }
+
+                else if (instruction == "Add")
+                {
+                    Console.WriteLine("Invalid placement!");
+                }
+
+                commands = Console.ReadLine();
+            }
+
+            Console.WriteLine(string.Join('|', targets));
+        }
+    }
+}
