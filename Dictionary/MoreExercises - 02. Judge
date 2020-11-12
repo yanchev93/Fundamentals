@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace _02._Judge
+{
+    class Judge
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<string, Dictionary<string, int>> dict = new Dictionary<string, Dictionary<string, int>>();
+
+            string input = Console.ReadLine();
+            while (input != "no more time")
+            {
+                string[] currentInput = input.Split(" -> ");
+                string userName = currentInput[0];
+                string contest = currentInput[1];
+                int points = int.Parse(currentInput[2]);
+
+
+                if (!dict.ContainsKey(contest))
+                {
+                    dict[contest] = new Dictionary<string, int>();
+
+                    dict[contest].Add(userName, points);
+                    input = Console.ReadLine();
+                    continue;
+                }
+                else
+                {
+                    if (!dict[contest].ContainsKey(userName))
+                    {
+                        dict[contest].Add(userName, points);
+                    }
+                    else if (dict.ContainsKey(contest) && dict[contest][userName] < points)
+                    {
+                        dict[contest][userName] = points;
+                    }
+
+                }
+
+
+                input = Console.ReadLine();
+            }
+
+            Dictionary<string, int> individualDict = new Dictionary<string, int>();
+            int count = 0;
+
+            foreach (var contest in dict)
+            {
+                string nameContest = contest.Key;
+                Dictionary<string, int> users = dict[nameContest];
+
+                Console.WriteLine($"{nameContest}: {users.Count()} participants");
+
+                count = 0;                
+
+                users = users
+                        .OrderByDescending(x => x.Value)
+                        .ThenBy(x => x.Key)
+                        .ToDictionary(x => x.Key, x => x.Value);
+
+                foreach (var user in users)
+                {
+                    string name = user.Key;
+                    int points = user.Value;
+
+                    if (!individualDict.ContainsKey(name))
+                    {
+                        individualDict[name] = 0;
+                    }
+
+                    individualDict[name] += points;
+
+                    count += 1;
+                    Console.WriteLine($"{count}. {name} <::> {points}");
+                }                
+            }
+
+            count = 0;
+
+            individualDict = individualDict
+                             .OrderByDescending(x => x.Value)
+                             .ThenBy(x => x.Key)
+                             .ToDictionary(x=>x.Key, x=>x.Value);
+
+            Console.WriteLine("Individual standings: ");
+
+            foreach (var individual in individualDict)
+            {
+                string nameIndividual = individual.Key;
+                int individualPoints = individual.Value;
+
+                count += 1;
+                Console.WriteLine($"{count}. {nameIndividual} -> {individualPoints}");
+            }
+
+        }
+    }
+}
