@@ -1,0 +1,122 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
+namespace AssociativeArrays__Dictionary_____MoreExercise
+{
+    class Ranking
+    {
+        static void Main()
+        {
+            Dictionary<string, string> contestsAndPasswords = new Dictionary<string, string>();
+
+            Dictionary<string, Dictionary<string, int>> interns = new Dictionary<string, Dictionary<string, int>>();
+
+            string commandOne = Console.ReadLine();
+            while (commandOne != "end of contests")
+            {
+                string[] currentCommand = commandOne.Split(':');
+                string contest = currentCommand[0];
+                string password = currentCommand[1];
+
+                if (!contestsAndPasswords.ContainsKey(contest))
+                {
+                    contestsAndPasswords[contest] = password;
+                }
+
+                commandOne = Console.ReadLine();
+            }
+
+            string commandTwo = Console.ReadLine();
+            while (commandTwo != "end of submissions")
+            {
+                string[] input = commandTwo.Split("=>");
+                string contest = input[0];
+                string password = input[1];
+                string userName = input[2];
+                int points = int.Parse(input[3]);
+
+                bool currentContest = contestsAndPasswords.ContainsKey(contest);
+                bool currentPassword = contestsAndPasswords.ContainsValue(password);
+
+                if (currentContest && currentPassword)
+                {
+                    if (!interns.ContainsKey(userName))
+                    {
+                        interns[userName] = new Dictionary<string, int>();
+                        
+                    }
+
+                    if (!interns[userName].ContainsKey(contest))
+                    {
+                        interns[userName].Add(contest, points);
+                    }
+                    else
+                    {
+                        if (interns[userName].ContainsKey(contest) && interns[userName][contest] < points)
+                        {
+                            interns[userName][contest] = points;                    
+
+                        }
+                    }
+
+                }
+
+                commandTwo = Console.ReadLine();
+            }
+
+            string bestName = string.Empty;
+            int bestSum = 0;
+
+            foreach (var candidate in interns)
+            {
+                string currentNameCandidate = candidate.Key;
+                Dictionary<string, int> currentBestPoints = interns[currentNameCandidate];
+
+                int sum = 0;
+                string name = string.Empty;
+                foreach (var kvp in currentBestPoints)
+                {
+                    string nameContest = kvp.Key;
+                    int points = kvp.Value;
+
+                    sum += points;
+                    name = nameContest;
+                }
+                if (sum > bestSum)
+                {
+                    bestName = currentNameCandidate;
+                    bestSum = sum;
+                }
+            }
+
+            Console.WriteLine($"Best candidate is {bestName} with total {bestSum} points.");
+            Console.WriteLine("Ranking: ");
+
+            interns = interns
+                      .OrderBy(x => x.Key)
+                      .ToDictionary(x => x.Key, x => x.Value);
+            
+            foreach (var kvp in interns)
+            {
+                string name = kvp.Key;
+                Dictionary<string, int> contestAndPoints = interns[name];
+
+
+                contestAndPoints = contestAndPoints
+                                .OrderByDescending(x => x.Value)
+                                .ToDictionary(x => x.Key, x => x.Value);
+
+                Console.WriteLine($"{name}");
+                foreach (var kvp2 in contestAndPoints)
+                {
+                    string contest = kvp2.Key;
+                    int points = kvp2.Value;
+
+                    Console.WriteLine($"#  {contest} -> {points}");
+                }
+            }
+        }
+    }
+}
