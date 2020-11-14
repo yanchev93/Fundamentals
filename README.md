@@ -1,1 +1,2 @@
-# Cases that I have worked during Fundamental module in Software University.
+C# Fundamentals 
+- Cases that I have worked on during the Fundamental module at Software University.
