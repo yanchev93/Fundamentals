@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace _02._AdAstra
+{
+    class Program
+    {
+        static void Main()
+        {
+            string pattern = @"(?<separator>[|#])(?<name>[A-z ]+)\1(?<date>\d{2}\/\d{2}\/\d{2})\1(?<calories>\d+)\1";
+
+            List<string> products = new List<string>();
+            double daysWithFood = 0.00;
+
+            string input = Console.ReadLine();
+
+            MatchCollection matches = Regex.Matches(input, pattern);
+
+            foreach (Match match in matches)
+            {
+                string name = match.Groups["name"].Value;
+                string date = match.Groups["date"].Value;
+                string calories = match.Groups["calories"].Value;
+
+                daysWithFood += double.Parse(calories);
+                string addItem = $"Item: {name}, Best before: {date}, Nutrition: {calories}";
+
+                products.Add(addItem);
+            }
+
+            daysWithFood = Math.Floor(daysWithFood / 2000);
+
+            Console.WriteLine($"You have food to last you for: {daysWithFood} days!");
+            if (0 < daysWithFood)
+            {
+                Console.WriteLine(string.Join(Environment.NewLine, products));
+            }
+        }
+    }
+}
