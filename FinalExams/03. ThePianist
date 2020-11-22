@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace _03._ThePianist
+{
+    class Program
+    {
+        static void Main()
+        {
+            int numberOfPieces = int.Parse(Console.ReadLine());
+            var dictPiano = new SortedDictionary<string, SortedDictionary<string, string>>();
+
+            for (int i = 0; i < numberOfPieces; i++)
+            {
+                string[] arr = Console.ReadLine().Split('|', StringSplitOptions.RemoveEmptyEntries);
+                string piece = arr[0];
+                string composer = arr[1];
+                string pianoKey = arr[2];
+
+                dictPiano[piece] = new SortedDictionary<string, string>();
+                dictPiano[piece].Add(composer, pianoKey);
+            }
+
+            string command = Console.ReadLine();
+            while (command != "Stop")
+            {
+                string[] currentCommand = command.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                string instruction = currentCommand[0];
+                string currentPiece = currentCommand[1];
+
+                if (instruction == "Add")
+                {
+                    string currentComposer = currentCommand[2];
+                    string currentPianoKey = currentCommand[3];
+
+                    if (!dictPiano.ContainsKey(currentPiece))
+                    {
+                        dictPiano[currentPiece] = new SortedDictionary<string, string>();
+                        dictPiano[currentPiece].Add(currentComposer, currentPianoKey);
+
+                        Console.WriteLine($"{currentPiece} by {currentComposer} in {currentPianoKey} added to the collection!");
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"{currentPiece} is already in the collection!");
+                    }
+                }
+
+                else if (instruction == "Remove")
+                {
+                    if (dictPiano.ContainsKey(currentPiece))
+                    {
+                        dictPiano.Remove(currentPiece);
+
+                        Console.WriteLine($"Successfully removed {currentPiece}!");
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"Invalid operation! {currentPiece} does not exist in the collection.");
+                    }
+                }
+
+                else if (instruction == "ChangeKey")
+                {
+                    string newKey = currentCommand[2];
+
+                    if (dictPiano.ContainsKey(currentPiece))
+                    {
+                        foreach (var KVP in dictPiano[currentPiece])
+                        {
+                            var composer = KVP.Key;
+
+                            dictPiano[currentPiece][composer] = newKey;
+
+                            Console.WriteLine($"Changed the key of {currentPiece} to {newKey}!");
+                            break;
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"Invalid operation! {currentPiece} does not exist in the collection.");
+                    }
+                }
+
+                command = Console.ReadLine();
+            }
+
+
+            foreach (var kvp in dictPiano)
+            {
+                var piece = kvp.Key;
+                var valueDict = kvp.Value;
+
+                foreach (var composerAndKey in valueDict)
+                {
+                    var composer = composerAndKey.Key;
+                    var pianoKey = composerAndKey.Value;
+
+                    Console.WriteLine($"{piece} -> Composer: {composer}, Key: {pianoKey}");
+                }
+            }
+        }
+    }
+}
