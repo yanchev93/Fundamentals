@@ -1,0 +1,58 @@
+using System;
+using System.Text;
+using System.Linq;
+
+namespace _01._TheImitationGame
+{
+    class Program
+    {
+        static void Main()
+        {
+            string encryptedMSG = Console.ReadLine();
+            StringBuilder decryptedMSG = new StringBuilder();
+            decryptedMSG.Append(encryptedMSG);
+
+            string command = Console.ReadLine();
+            while (command != "Decode")
+            {
+                string[] currentCommand = command.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                string instruction = currentCommand[0];
+                string firstCase = currentCommand[1];
+
+                if (instruction == "Move")
+                {
+                    int n = int.Parse(firstCase);
+                    for (int i = 0; i < n; i++)
+                    {
+                        char letter = decryptedMSG[0];
+
+                        decryptedMSG.Remove(0, 1);
+                        decryptedMSG.Append(letter);
+                    }
+                }
+
+                else if (instruction == "Insert")
+                {
+                    int index = int.Parse(firstCase);
+                    string value = currentCommand[2];
+
+                    if (0 <= index && index <= decryptedMSG.Length)
+                    {
+                        decryptedMSG.Insert(index, value);
+                    }
+                }
+
+                else if (instruction == "ChangeAll")
+                {
+                    string replacement = currentCommand[2];
+
+                    decryptedMSG.Replace(firstCase, replacement);
+                }
+
+                command = Console.ReadLine();
+            }
+
+            Console.WriteLine($"The decrypted message is: {decryptedMSG}");
+        }
+    }
+}
