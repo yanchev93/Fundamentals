@@ -1,0 +1,64 @@
+using System;
+using System.Text;
+
+namespace _01._WorldTour
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string input = Console.ReadLine();
+            StringBuilder stops = new StringBuilder();
+
+            stops.Append(input);
+
+            string command = Console.ReadLine();
+            while (command != "Travel")
+            {
+                string[] currentCommand = command.Split(':', StringSplitOptions.RemoveEmptyEntries);
+                string instruction = currentCommand[0];
+
+                if (instruction == "Add Stop")
+                {
+                    int index = int.Parse(currentCommand[1]);
+                    string addString = currentCommand[2];
+
+                    if (0 <= index && index < stops.Length) // NB!! Last Index
+                    {
+                        stops.Insert(index, addString);
+                    }
+                }
+
+                else if (instruction == "Remove Stop")
+                {
+                    int startIndex = int.Parse(currentCommand[1]);
+                    int endIndex = int.Parse(currentCommand[2]);
+
+                    if ((0 <= startIndex && startIndex < stops.Length)
+                        && (0 <= endIndex && endIndex < stops.Length))
+                    {
+                        int length = Math.Abs(endIndex - startIndex) + 1;
+                        stops.Remove(startIndex, length);
+                    }
+                }
+
+                else if (instruction == "Switch")
+                {
+                    string oldString = currentCommand[1];
+                    string newString = currentCommand[2];
+
+                    if (stops.ToString().Contains(oldString))
+                    {
+                        stops.Replace(oldString, newString);
+                    }
+                }
+
+                Console.WriteLine($"{stops}");
+
+                command = Console.ReadLine();
+            }
+
+            Console.WriteLine($"Ready for world tour! Planned stops: {stops}");
+        }
+    }
+}
